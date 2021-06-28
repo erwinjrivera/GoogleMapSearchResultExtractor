@@ -59,5 +59,15 @@ namespace GoogleMapSearchResultExtractor.Properties {
                 resourceCulture = value;
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        internal static byte[] ZZupdater0 {
+            get {
+                object obj = ResourceManager.GetObject("ZZupdater0", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
     }
 }

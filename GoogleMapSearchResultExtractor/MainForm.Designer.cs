@@ -33,23 +33,23 @@ namespace GoogleMapSearchResultExtractor
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.imageList1 = new System.Windows.Forms.ImageList(this.components);
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+            this.statusStrip2 = new System.Windows.Forms.StatusStrip();
+            this.txtResultCount = new System.Windows.Forms.ToolStripSplitButton();
+            this.extractToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.btnSearch = new System.Windows.Forms.PictureBox();
             this.txtSearch = new System.Windows.Forms.TextBox();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
-            this.statusStrip2 = new System.Windows.Forms.StatusStrip();
-            this.extractToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.txtResultCount = new System.Windows.Forms.ToolStripSplitButton();
             this.lblStatus = new System.Windows.Forms.ToolStripStatusLabel();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
+            this.statusStrip2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.btnSearch)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.statusStrip1.SuspendLayout();
-            this.statusStrip2.SuspendLayout();
             this.SuspendLayout();
             // 
             // imageList1
@@ -90,6 +90,49 @@ namespace GoogleMapSearchResultExtractor
             this.splitContainer1.SplitterDistance = 141;
             this.splitContainer1.SplitterWidth = 1;
             this.splitContainer1.TabIndex = 2;
+            // 
+            // statusStrip2
+            // 
+            this.statusStrip2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.statusStrip2.BackColor = System.Drawing.Color.White;
+            this.statusStrip2.Dock = System.Windows.Forms.DockStyle.None;
+            this.statusStrip2.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.txtResultCount});
+            this.statusStrip2.Location = new System.Drawing.Point(1134, 108);
+            this.statusStrip2.Name = "statusStrip2";
+            this.statusStrip2.Size = new System.Drawing.Size(90, 23);
+            this.statusStrip2.SizingGrip = false;
+            this.statusStrip2.TabIndex = 19;
+            this.statusStrip2.Text = "statusStrip2";
+            // 
+            // txtResultCount
+            // 
+            this.txtResultCount.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+            this.txtResultCount.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.txtResultCount.DropDownButtonWidth = 18;
+            this.txtResultCount.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.extractToolStripMenuItem});
+            this.txtResultCount.Font = new System.Drawing.Font("Arial", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtResultCount.ForeColor = System.Drawing.Color.DimGray;
+            this.txtResultCount.Image = ((System.Drawing.Image)(resources.GetObject("txtResultCount.Image")));
+            this.txtResultCount.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.txtResultCount.Name = "txtResultCount";
+            this.txtResultCount.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.txtResultCount.Size = new System.Drawing.Size(73, 21);
+            this.txtResultCount.Text = "Result";
+            this.txtResultCount.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // extractToolStripMenuItem
+            // 
+            this.extractToolStripMenuItem.AutoToolTip = true;
+            this.extractToolStripMenuItem.BackColor = System.Drawing.Color.White;
+            this.extractToolStripMenuItem.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.extractToolStripMenuItem.Font = new System.Drawing.Font("Roboto", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.extractToolStripMenuItem.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.extractToolStripMenuItem.Name = "extractToolStripMenuItem";
+            this.extractToolStripMenuItem.Size = new System.Drawing.Size(110, 22);
+            this.extractToolStripMenuItem.Text = "Export";
+            this.extractToolStripMenuItem.Click += new System.EventHandler(this.extractToolStripMenuItem_Click);
             // 
             // btnSearch
             // 
@@ -149,59 +192,19 @@ namespace GoogleMapSearchResultExtractor
             this.lblStatus});
             this.statusStrip1.Location = new System.Drawing.Point(0, 522);
             this.statusStrip1.Name = "statusStrip1";
+            this.statusStrip1.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
             this.statusStrip1.Size = new System.Drawing.Size(1233, 22);
+            this.statusStrip1.SizingGrip = false;
             this.statusStrip1.TabIndex = 0;
             this.statusStrip1.Text = "statusStrip1";
             // 
-            // statusStrip2
-            // 
-            this.statusStrip2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.statusStrip2.BackColor = System.Drawing.Color.White;
-            this.statusStrip2.Dock = System.Windows.Forms.DockStyle.None;
-            this.statusStrip2.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.txtResultCount});
-            this.statusStrip2.Location = new System.Drawing.Point(1103, 108);
-            this.statusStrip2.Name = "statusStrip2";
-            this.statusStrip2.Size = new System.Drawing.Size(121, 23);
-            this.statusStrip2.SizingGrip = false;
-            this.statusStrip2.TabIndex = 19;
-            this.statusStrip2.Text = "statusStrip2";
-            // 
-            // extractToolStripMenuItem
-            // 
-            this.extractToolStripMenuItem.AutoToolTip = true;
-            this.extractToolStripMenuItem.BackColor = System.Drawing.Color.White;
-            this.extractToolStripMenuItem.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
-            this.extractToolStripMenuItem.Font = new System.Drawing.Font("Roboto", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.extractToolStripMenuItem.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.extractToolStripMenuItem.Name = "extractToolStripMenuItem";
-            this.extractToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.extractToolStripMenuItem.Text = "Export";
-            this.extractToolStripMenuItem.Click += new System.EventHandler(this.extractToolStripMenuItem_Click);
-            // 
-            // txtResultCount
-            // 
-            this.txtResultCount.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
-            this.txtResultCount.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
-            this.txtResultCount.DropDownButtonWidth = 18;
-            this.txtResultCount.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.extractToolStripMenuItem});
-            this.txtResultCount.Font = new System.Drawing.Font("Arial", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtResultCount.ForeColor = System.Drawing.Color.DimGray;
-            this.txtResultCount.Image = ((System.Drawing.Image)(resources.GetObject("txtResultCount.Image")));
-            this.txtResultCount.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.txtResultCount.Name = "txtResultCount";
-            this.txtResultCount.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.txtResultCount.Size = new System.Drawing.Size(73, 21);
-            this.txtResultCount.Text = "Result";
-            this.txtResultCount.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            // 
             // lblStatus
             // 
-            this.lblStatus.Font = new System.Drawing.Font("Arial", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblStatus.ForeColor = System.Drawing.Color.Gray;
+            this.lblStatus.Font = new System.Drawing.Font("Roboto", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblStatus.ForeColor = System.Drawing.Color.LightGray;
             this.lblStatus.Name = "lblStatus";
-            this.lblStatus.Size = new System.Drawing.Size(42, 17);
+            this.lblStatus.Padding = new System.Windows.Forms.Padding(5, 0, 0, 0);
+            this.lblStatus.Size = new System.Drawing.Size(47, 17);
             this.lblStatus.Text = "Status";
             // 
             // MainForm
@@ -212,8 +215,11 @@ namespace GoogleMapSearchResultExtractor
             this.ClientSize = new System.Drawing.Size(1233, 686);
             this.Controls.Add(this.splitContainer1);
             this.DoubleBuffered = true;
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "MainForm";
-            this.Text = "MainForm";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
+            this.Text = "GoogleMapsSearchResultExtractor";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainForm_FormClosing);
             this.Load += new System.EventHandler(this.MainForm_Load);
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel1.PerformLayout();
@@ -221,12 +227,12 @@ namespace GoogleMapSearchResultExtractor
             this.splitContainer1.Panel2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
             this.splitContainer1.ResumeLayout(false);
+            this.statusStrip2.ResumeLayout(false);
+            this.statusStrip2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.btnSearch)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.statusStrip1.ResumeLayout(false);
             this.statusStrip1.PerformLayout();
-            this.statusStrip2.ResumeLayout(false);
-            this.statusStrip2.PerformLayout();
             this.ResumeLayout(false);
 
         }

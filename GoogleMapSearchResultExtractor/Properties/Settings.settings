@@ -5,5 +5,8 @@
     <Setting Name="Limit" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">100</Value>
     </Setting>
+    <Setting Name="Repository" Type="System.String" Scope="User">
+      <Value Profile="(Default)">/erwinjrivera/GoogleMapSearchResultExtractor</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

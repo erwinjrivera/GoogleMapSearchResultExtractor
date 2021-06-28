@@ -34,5 +34,17 @@ namespace GoogleMapSearchResultExtractor.Properties {
                 this["Limit"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("/erwinjrivera/GoogleMapSearchResultExtractor")]
+        public string Repository {
+            get {
+                return ((string)(this["Repository"]));
+            }
+            set {
+                this["Repository"] = value;
+            }
+        }
     }
 }

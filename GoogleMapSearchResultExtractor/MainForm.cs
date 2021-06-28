@@ -1,6 +1,7 @@
 ﻿using GoogleMapSearchResultExtractor.Controller;
 using GoogleMapSearchResultExtractor.Model;
 using GoogleMapSearchResultExtractor.Service;
+using GoogleMapSearchResultExtractor.Utils.Logger;
 using GoogleMapSearchResultExtractor.View;
 using HtmlAgilityPack;
 using System;
@@ -27,6 +28,8 @@ namespace GoogleMapSearchResultExtractor
         public MainForm()
         {
             InitializeComponent();
+
+            Logger.Info("Application started.");
         }
 
         private void MainForm_Load(object sender, EventArgs e)
@@ -37,6 +40,8 @@ namespace GoogleMapSearchResultExtractor
                 new GoogleSearchService());
 
             _controller.Initialize();
+
+            this.Text = this.Text + " - v" + Assembly.GetEntryAssembly().GetName().Version.ToString();
         }
 
         public bool SearchBoxEnabled 
@@ -93,6 +98,11 @@ namespace GoogleMapSearchResultExtractor
             flowLayoutPanel1.Controls.Add((CardItemUserControl)item);
         }
 
+        public int GetResultCount()
+        {
+            return flowLayoutPanel1.Controls.Count;
+        }
+
         private void On_Paint(object sender, PaintEventArgs e)
         {
             using (SolidBrush brush = new SolidBrush(BackColor))
@@ -132,6 +142,8 @@ namespace GoogleMapSearchResultExtractor
             //ExtractDomainFromUrl(txtSearch.Text);
 
             //_controller.TestFlowLayoutPanel(500);
+
+            //_controller.TimerTest();
         }
 
         private void ExtractDomainFromUrl(string url)
@@ -188,6 +200,16 @@ namespace GoogleMapSearchResultExtractor
                     _controller.ExtractResultToTextFile(saveFileDialog.FileName);
                 }
             }
+        }
+
+        private void timer1_Tick(object sender, EventArgs e)
+        {
+
+        }
+
+        private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            Logger.Warning("Clossing application...");
         }
     }
 }

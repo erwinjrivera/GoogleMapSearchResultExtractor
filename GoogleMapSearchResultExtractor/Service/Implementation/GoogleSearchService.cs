@@ -1,4 +1,5 @@
 ﻿using GoogleMapSearchResultExtractor.Model;
+using GoogleMapSearchResultExtractor.Utils.Logger;
 using HtmlAgilityPack;
 using System;
 using System.Collections.Generic;
@@ -118,9 +119,84 @@ namespace GoogleMapSearchResultExtractor.Service
                             item.Address = address;
                             item.Hours = hours;
                             item.Phone = phone;
+
+
+                            if (string.IsNullOrEmpty(item.Description))
+                            {
+                                Logger.Warning("Description not found.");
+                            }
+                            else
+                            {
+                                Logger.Info($"Description: {item.Description}");
+                            }
+
+                            if (string.IsNullOrEmpty(item.Address))
+                            {
+                                Logger.Warning("Address not found.");
+                            }
+                            else
+                            {
+                                Logger.Info($"Address: {item.Address}");
+                            }
+
+                            if (string.IsNullOrEmpty(item.Rating))
+                            {
+                                Logger.Warning("Rating not found.");
+                            }
+                            else
+                            {
+                                Logger.Info($"Rating: {item.Rating}");
+                            }
+
+                            if (string.IsNullOrEmpty(item.Reviews))
+                            {
+                                Logger.Warning("Reviews not found.");
+                            }
+                            else
+                            {
+                                Logger.Info($"Reviews: {item.Reviews}");
+                            }
+
+                            if (string.IsNullOrEmpty(item.Phone))
+                            {
+                                Logger.Warning("Phone not found.");
+                            }
+                            else
+                            {
+                                Logger.Info($"Phone: {item.Phone}");
+                            }
+
+                            if (string.IsNullOrEmpty(item.Website))
+                            {
+                                Logger.Warning("Website not found.");
+                            }
+                            else
+                            {
+                                Logger.Info($"Website: <a href='{item.Website}'>{item.Website}</a>");
+                            }
+
+                            if (string.IsNullOrEmpty(item.Hours))
+                            {
+                                Logger.Warning("Hours not found.");
+                            }
+                            else
+                            {
+                                Logger.Info($"Hours: {item.Hours}");
+                            }
+
+
+                            Logger.Info("Looking for emails...");
+
                             item.Email = SearchEmails(item.Title, item.Website);
 
-                            
+                            if (string.IsNullOrEmpty(item.Email))
+                            {
+                                //Logger.Warning("Email not found.");
+                            }
+                            else
+                            {
+                                //Logger.Info($"Email: {item.Email}");
+                            }
                         }
                     }
                     catch (Exception ex)
@@ -386,7 +462,7 @@ namespace GoogleMapSearchResultExtractor.Service
 
                                     if (!domainIsFoundInEmailAddress)
                                     {
-                                        Debug.WriteLine($"------------>Email(s): [{emails}] does not match with the domain ({domain}). Trying to extract emails from the website: {website}");
+                                        Debug.WriteLine($"------------>Email(s): [{emails}] does not match with the website's domain ({domain}). Trying to extract emails from the website: {website}");
 
                                         // 1st attempt
                                         string emailsFromWebsite = GetEmailsFromWebsitePage(website);
@@ -455,7 +531,7 @@ namespace GoogleMapSearchResultExtractor.Service
                         }
                         else
                         {
-                            Debug.WriteLine($"------------>No email found from the organic result");
+                            Debug.WriteLine($"------------>No emails found from the organic result");
                         }
                     }
 
@@ -464,6 +540,8 @@ namespace GoogleMapSearchResultExtractor.Service
                 // for organic results
                 if (organic != null)
                 {
+                    //Logger.Info("Search (organic) results:");
+
                     Debug.WriteLine("Fetching organic results:");
                     int counter = 1;
                     foreach (var result in organic)
@@ -474,6 +552,7 @@ namespace GoogleMapSearchResultExtractor.Service
 
                         try
                         {
+                          
                             var divTitle = result.SelectSingleNode(".//div[@class='BNeawe vvjwJb AP7Wnd']");
                             var divDescription = result.SelectSingleNode(".//div[@class='BNeawe s3v9rd AP7Wnd']");
                             var anchorUrl = result.SelectSingleNode(".//div[@class='kCrYT']/a");
@@ -482,10 +561,16 @@ namespace GoogleMapSearchResultExtractor.Service
                             description = divDescription != null ? divDescription.InnerText : null;
                             url = anchorUrl != null ? CleanUrl(anchorUrl.GetAttributeValue("href", null)) : null;
 
+                            if (string.IsNullOrEmpty(title) && string.IsNullOrWhiteSpace(url))
+                                continue;
+
                             Debug.WriteLine($"---->{counter}. Organic result:");
                             Debug.WriteLine($"-------->Title: {title}");
                             Debug.WriteLine($"-------->URL: {url}");
                             Debug.WriteLine($"-------->Extracting email from the URL...");
+
+                            Logger.Info($"Attempting to scrape emails from: <a href='{url}'>{title}</a> ({url})");
+                        
 
                             if (url != null)
                             {
@@ -531,6 +616,8 @@ namespace GoogleMapSearchResultExtractor.Service
 
                         if (emails != null)
                         {
+                            Logger.Info($"Found ({emails.Split(',').Count()}) email(s): {emails}");
+
                             if (!string.IsNullOrEmpty(website))
                             {
                                 bool domainIsFoundInEmailAddress = false;
@@ -539,6 +626,8 @@ namespace GoogleMapSearchResultExtractor.Service
                                 {
                                     string domain = ExtractDomainFromUrl(website);
 
+                               
+
                                     if (domain != null && emails.ToLower().Contains(domain.ToLower()))
                                     {
                                         domainIsFoundInEmailAddress = true;
@@ -546,21 +635,43 @@ namespace GoogleMapSearchResultExtractor.Service
 
                                     if (!domainIsFoundInEmailAddress)
                                     {
+                                        if (emails.Split(',').Length > 1)
+                                            Logger.Warning($"Some of the emails ({emails}) do not match with the website's domain ({domain}).");
+                                        else
+                                            Logger.Warning($"The email ({emails}) does not match with the website's domain ({domain}).");
+
                                         Debug.WriteLine($"------------>Email(s): [{emails}] does not match with the domain ({domain}). Trying to extract emails from the website: {website}");
 
+                                       
+                                        Logger.Info($"Attempting to scrape emails from: <a href='{website}'>{website}</a>...");
+
                                         // 1st attempt
-                                        string emailsFromWebsite = GetEmailsFromWebsitePage(website);
+                                        string emailsFromWebsite = null;
+
+                                        try
+                                        {
+                                            emailsFromWebsite = GetEmailsFromWebsitePage(website);
+                                        }
+                                        catch (Exception ex)
+                                        {
+                                            Debug.WriteLine("Error in first attempt extracting email from website: " + (website + "contact-us. ") + ex.Message);
+                                        }
 
 
                                         if ((domain != null && emailsFromWebsite != null) && emailsFromWebsite.ToLower().Contains(domain.ToLower()))
                                         {
                                             Debug.WriteLine($"------------>Extracted email(s) from the website: [{emailsFromWebsite}]");
                                             emails = emailsFromWebsite;
+
+                                            Logger.Info($"Found ({emails.Split(',').Count()}) email(s): {emails}");
                                         }
+
+
 
                                         if (string.IsNullOrEmpty(emailsFromWebsite))
                                         {
                                             Debug.WriteLine($"------------>No emails found from website: [{website}]");
+                                            Logger.Info($"No emails found.");
 
                                             if (website != null)
                                             {
@@ -572,10 +683,17 @@ namespace GoogleMapSearchResultExtractor.Service
                                                 try
                                                 {
                                                     // 2nd attempt
+                
+                                                    Logger.Info($"Attempting to scrape emails from: <a href='{website + "contact-us"}'>{website + "contact-us"}</a>...");
                                                     emailsFromWebsite = GetEmailsFromWebsitePage(website + "contact-us");
                                                 }
                                                 catch (Exception ex)
                                                 {
+                                                    if (ex.Message.Contains("(40"))
+                                                        Logger.Info("No emails found.");
+                                                    else
+                                                        Logger.Error($"{ex.Message}");
+
                                                     Debug.WriteLine("Error in second attempt extracting email from website: " + (website + "contact-us. ") + ex.Message);
                                                 }
 
@@ -584,6 +702,7 @@ namespace GoogleMapSearchResultExtractor.Service
                                                 {
                                                     Debug.WriteLine($"------------>Extracted email(s) from the website: [{emailsFromWebsite}]");
                                                     emails = emailsFromWebsite;
+                                                    Logger.Info($"Found ({emails.Split(',').Count()}) email(s): {emails}");
                                                 }
                                             }
                                         }
@@ -591,6 +710,8 @@ namespace GoogleMapSearchResultExtractor.Service
                                         if (string.IsNullOrEmpty(emailsFromWebsite))
                                         {
                                             Debug.WriteLine($"------------>No emails found from website: [{website}]");
+
+                                            Logger.Info($"No emails found.");
 
                                             if (website != null)
                                             {
@@ -602,10 +723,17 @@ namespace GoogleMapSearchResultExtractor.Service
                                                 try
                                                 {
                                                     // 3rd attempt
+                                              
+                                                    Logger.Info($"Attempting to scrape emails from: <a href='{website + "contact"}'>{website + "contact"}</a>...");
                                                     emailsFromWebsite = GetEmailsFromWebsitePage(website + "contact");
                                                 }
                                                 catch (Exception ex)
                                                 {
+                                                    if (ex.Message.Contains("(40"))
+                                                        Logger.Info("No emails found.");
+                                                    else
+                                                        Logger.Error($"{ex.Message}");
+
                                                     Debug.WriteLine("Error in second attempt extracting email from website: " + (website + "contact. ") + ex.Message);
                                                 }
 
@@ -614,12 +742,15 @@ namespace GoogleMapSearchResultExtractor.Service
                                                 {
                                                     Debug.WriteLine($"------------>Extracted email(s) from the website: [{emailsFromWebsite}]");
                                                     emails = emailsFromWebsite;
+                                                    Logger.Info($"Found ({emails.Split(',').Count()}) email(s): {emails}");
                                                 }
                                             }
                                         }
 
                                         if (string.IsNullOrEmpty(emailsFromWebsite))
                                         {
+                                            Logger.Info($"No emails found.");
+
                                             Debug.WriteLine($"------------>No emails found from website: [{website}]");
 
                                             if (website != null)
@@ -632,10 +763,17 @@ namespace GoogleMapSearchResultExtractor.Service
                                                 try
                                                 {
                                                     // 4th attempt
+                                                    
+                                                    Logger.Info($"Attempting to scrape emails from: <a href='{website + "sample-page"}'>{website + "sample-page"}</a>...");
                                                     emailsFromWebsite = GetEmailsFromWebsitePage(website + "sample-page");
                                                 }
                                                 catch (Exception ex)
                                                 {
+                                                    if (ex.Message.Contains("(40"))
+                                                        Logger.Info("No emails found.");
+                                                    else
+                                                        Logger.Error($"{ex.Message}");
+
                                                     Debug.WriteLine("Error in second attempt extracting email from website: " + (website + "sample-page. ") + ex.Message);
                                                 }
 
@@ -644,12 +782,15 @@ namespace GoogleMapSearchResultExtractor.Service
                                                 {
                                                     Debug.WriteLine($"------------>Extracted email(s) from the website: [{emailsFromWebsite}]");
                                                     emails = emailsFromWebsite;
+                                                    Logger.Info($"Found ({emails.Split(',').Count()}) email(s): {emails}");
                                                 }
                                             }
                                         }
 
                                         if (string.IsNullOrEmpty(emailsFromWebsite))
                                         {
+                                            Logger.Info($"No emails found.");
+
                                             Debug.WriteLine($"------------>No emails found from website: [{website}]");
 
                                             if (website != null)
@@ -662,10 +803,17 @@ namespace GoogleMapSearchResultExtractor.Service
                                                 try
                                                 {
                                                     // 5th attempt
+
+                                                    Logger.Info($"Attempting to scrape emails from: <a href='{website + "about"}'>{website + "about"}</a>...");
                                                     emailsFromWebsite = GetEmailsFromWebsitePage(website + "about");
                                                 }
                                                 catch (Exception ex)
                                                 {
+                                                    if (ex.Message.Contains("(40"))
+                                                        Logger.Info("No emails found.");
+                                                    else
+                                                        Logger.Error($"{ex.Message}");
+
                                                     Debug.WriteLine("Error in second attempt extracting email from website: " + (website + "about. ") + ex.Message);
                                                 }
 
@@ -674,12 +822,15 @@ namespace GoogleMapSearchResultExtractor.Service
                                                 {
                                                     Debug.WriteLine($"------------>Extracted email(s) from the website: [{emailsFromWebsite}]");
                                                     emails = emailsFromWebsite;
+                                                    Logger.Info($"Found ({emails.Split(',').Count()}) email(s): {emails}");
                                                 }
                                             }
                                         }
 
                                         if (string.IsNullOrEmpty(emailsFromWebsite))
                                         {
+                                            Logger.Info($"No emails found.");
+
                                             Debug.WriteLine($"------------>No emails found from website: [{website}]");
 
                                             if (website != null)
@@ -692,10 +843,16 @@ namespace GoogleMapSearchResultExtractor.Service
                                                 try
                                                 {
                                                     // 6th attempt
+                                                    Logger.Info($"Attempting to scrape emails from: <a href='{website + "about-us"}'>{website + "about-us"}</a>...");
                                                     emailsFromWebsite = GetEmailsFromWebsitePage(website + "about-us");
                                                 }
                                                 catch (Exception ex)
                                                 {
+                                                    if (ex.Message.Contains("(40"))
+                                                        Logger.Info("No emails found.");
+                                                    else
+                                                        Logger.Error($"{ex.Message}");
+
                                                     Debug.WriteLine("Error in second attempt extracting email from website: " + (website + "about-us. ") + ex.Message);
                                                 }
 
@@ -704,8 +861,15 @@ namespace GoogleMapSearchResultExtractor.Service
                                                 {
                                                     Debug.WriteLine($"------------>Extracted email(s) from the website: [{emailsFromWebsite}]");
                                                     emails = emailsFromWebsite;
+                                                    Logger.Info($"Found ({emails.Split(',').Count()}) email(s): {emails}");
                                                 }
                                             }
+                                        }
+
+                                        if (string.IsNullOrEmpty(emailsFromWebsite))
+                                        {
+                                            //Logger.Info("No emails found from the alternate web pages.");
+                                            Logger.Info($"No emails found.");
                                         }
 
 
@@ -715,6 +879,7 @@ namespace GoogleMapSearchResultExtractor.Service
                                 }
                                 catch (Exception ex)
                                 {
+                                    Logger.Error($"{ex.Message} {ex.StackTrace}");
                                     Debug.WriteLine($"------------>Error while searching alternate email. " + ex.Message);
                                 }
                             }
@@ -750,13 +915,17 @@ namespace GoogleMapSearchResultExtractor.Service
 
 
                             Debug.WriteLine($"------------>Email found: {emails}");
+
+                            Logger.Info($"Email(s): {emails.ToLower()}");
+
                             return emails.ToLower();
                         }
                         else
                         {
-                            Debug.WriteLine($"------------>No email found from the organic result");
+                            Logger.Info("No emails found.");
+                            Debug.WriteLine($"------------>No emails found from the organic result");
                         }
-                    }
+                    } //for
                 } // end organic search
                     
             }
@@ -949,6 +1118,8 @@ namespace GoogleMapSearchResultExtractor.Service
 
         private static HtmlDocument GetHtmlDocument(string url)
         {
+            //Thread.Sleep(new Random().Next(10, 25) * 1000);
+
             var client = new System.Net.WebClient();
             byte[] buffer = client.DownloadData(url);
 
@@ -956,28 +1127,12 @@ namespace GoogleMapSearchResultExtractor.Service
             htmlDocument.LoadHtml(client.DownloadString(url));
 
             return htmlDocument;
-
-            /*
-            using (var streamReader = new StreamReader(WebRequest.Create(url).GetResponse().GetResponseStream()))
-            {
-                var htmlString = streamReader.ReadToEnd();
-
-                if (!String.IsNullOrEmpty(htmlString))
-                {
-                    var htmlDocument = new HtmlAgilityPack.HtmlDocument();
-                    htmlDocument.LoadHtml(htmlString);
-
-                    return htmlDocument;
-                }
-            }
-            
-
-            return null;
-            */
         }
 
         private static string GetHtmlString(string url)
         {
+            //Thread.Sleep(new Random().Next(13, 36) * 1000);
+
             var client = new System.Net.WebClient();
             byte[] buffer = client.DownloadData(url);
 

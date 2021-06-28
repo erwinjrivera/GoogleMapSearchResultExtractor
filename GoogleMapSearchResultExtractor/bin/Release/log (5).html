@@ -1,0 +1,23 @@
+<style> div.info { font-family: 'Consolas'; font-size: 13px; color: gray; } div.error { font-family: 'Consolas'; font-size: 13px; color: red; } div.warning { font-family: 'Consolas'; font-size: 13px; color: orange; } </style>
+<div class='info'>[info] 2021-06-27 02:11:08: Start</div>
+<div class='info'>[info] 2021-06-27 02:11:08: Search term: Restaurants in New York City, NY 10001, United States</div>
+<div class='error'>[error] 2021-06-27 02:11:10:    at System.Net.WebClient.DownloadDataInternal(Uri address, WebRequest& request)
+   at System.Net.WebClient.DownloadString(Uri address)
+   at System.Net.WebClient.DownloadString(String address)
+   at GoogleMapSearchResultExtractor.Service.GoogleSearchService.GetHtmlDocument(String url) in C:\Users\Kris\Documents\Git\GoogleMapSearchResultExtractor\GoogleMapSearchResultExtractor\Service\Implementation\GoogleSearchService.cs:line 957
+   at GoogleMapSearchResultExtractor.Service.GoogleSearchService.GetListOfMapResult(String keyword, Int32 offset) in C:\Users\Kris\Documents\Git\GoogleMapSearchResultExtractor\GoogleMapSearchResultExtractor\Service\Implementation\GoogleSearchService.cs:line 25
+   at GoogleMapSearchResultExtractor.Controller.MapResultController.BackgroundWorker_DoWork(Object sender, DoWorkEventArgs e) in C:\Users\Kris\Documents\Git\GoogleMapSearchResultExtractor\GoogleMapSearchResultExtractor\Controller\MapResultController.cs:line 76</div>
+<div class='info'>[info] 2021-06-27 02:11:10: Completed search.</div>
+<div class='info'>[info] 2021-06-27 02:11:10: 0 search result (elapsed time 00:00:02.2)</div>
+<div class='info'>[info] 2021-06-27 02:11:10: End</div>
+<div class='info'>[info] 2021-06-27 02:11:36: Start</div>
+<div class='info'>[info] 2021-06-27 02:11:36: Search term: test</div>
+<div class='error'>[error] 2021-06-27 02:11:37:    at System.Net.WebClient.DownloadDataInternal(Uri address, WebRequest& request)
+   at System.Net.WebClient.DownloadData(Uri address)
+   at System.Net.WebClient.DownloadData(String address)
+   at GoogleMapSearchResultExtractor.Service.GoogleSearchService.GetHtmlDocument(String url) in C:\Users\Kris\Documents\Git\GoogleMapSearchResultExtractor\GoogleMapSearchResultExtractor\Service\Implementation\GoogleSearchService.cs:line 954
+   at GoogleMapSearchResultExtractor.Service.GoogleSearchService.GetListOfMapResult(String keyword, Int32 offset) in C:\Users\Kris\Documents\Git\GoogleMapSearchResultExtractor\GoogleMapSearchResultExtractor\Service\Implementation\GoogleSearchService.cs:line 25
+   at GoogleMapSearchResultExtractor.Controller.MapResultController.BackgroundWorker_DoWork(Object sender, DoWorkEventArgs e) in C:\Users\Kris\Documents\Git\GoogleMapSearchResultExtractor\GoogleMapSearchResultExtractor\Controller\MapResultController.cs:line 76</div>
+<div class='info'>[info] 2021-06-27 02:11:37: Completed search.</div>
+<div class='info'>[info] 2021-06-27 02:11:37: 0 search result (elapsed time 00:00:00.0)</div>
+<div class='info'>[info] 2021-06-27 02:11:37: End</div>

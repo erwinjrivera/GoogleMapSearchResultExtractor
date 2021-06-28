@@ -1,0 +1,14 @@
+<style> div.info { font-family: 'Consolas'; font-size: 13px; color: gray; } div.error { font-family: 'Consolas'; font-size: 13px; color: red; } div.warning { font-family: 'Consolas'; font-size: 13px; color: orange; } </style>
+<div class='info'>[info] 2021-06-27 02:30:38: Application started.</div>
+<div class='info'>[info] 2021-06-27 02:30:42: Start search.</div>
+<div class='info'>[info] 2021-06-27 02:30:42: Keyphrase: Restaurants in Roswell, GA 30076, United States</div>
+<div class='error'>[error] 2021-06-27 02:30:43:    at System.Net.WebClient.DownloadDataInternal(Uri address, WebRequest& request)
+   at System.Net.WebClient.DownloadData(Uri address)
+   at System.Net.WebClient.DownloadData(String address)
+   at GoogleMapSearchResultExtractor.Service.GoogleSearchService.GetHtmlDocument(String url) in C:\Users\Kris\Documents\Git\GoogleMapSearchResultExtractor\GoogleMapSearchResultExtractor\Service\Implementation\GoogleSearchService.cs:line 954
+   at GoogleMapSearchResultExtractor.Service.GoogleSearchService.GetListOfMapResult(String keyword, Int32 offset) in C:\Users\Kris\Documents\Git\GoogleMapSearchResultExtractor\GoogleMapSearchResultExtractor\Service\Implementation\GoogleSearchService.cs:line 25
+   at GoogleMapSearchResultExtractor.Controller.MapResultController.BackgroundWorker_DoWork(Object sender, DoWorkEventArgs e) in C:\Users\Kris\Documents\Git\GoogleMapSearchResultExtractor\GoogleMapSearchResultExtractor\Controller\MapResultController.cs:line 76</div>
+<div class='info'>[info] 2021-06-27 02:30:43: Search completed.</div>
+<div class='info'>[info] 2021-06-27 02:30:43: 0 search result (elapsed time 00:00:00.0)</div>
+<div class='info'>[info] 2021-06-27 02:30:43: End of search.</div>
+<div class='warning'>[warning] 2021-06-27 02:31:14: Clossing application...</div>

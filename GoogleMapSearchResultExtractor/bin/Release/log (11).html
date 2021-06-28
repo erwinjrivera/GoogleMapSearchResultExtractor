@@ -1,0 +1,25 @@
+<style> div.info { font-family: 'Consolas'; font-size: 13px; color: gray; } div.error { font-family: 'Consolas'; font-size: 13px; color: red; } div.warning { font-family: 'Consolas'; font-size: 13px; color: orange; } </style>
+<div class='info'>[info] 2021-06-27 02:32:51: Application started.</div>
+<div class='info'>[info] 2021-06-27 02:32:56: Start search.</div>
+<div class='info'>[info] 2021-06-27 02:32:56: Keyphrase: Restaurants in New York City, NY 10001, United States</div>
+<div class='error'>[error] 2021-06-27 02:32:57: The remote server returned an error: (429) Too Many Requests.    at System.Net.WebClient.DownloadDataInternal(Uri address, WebRequest& request)
+   at System.Net.WebClient.DownloadData(Uri address)
+   at System.Net.WebClient.DownloadData(String address)
+   at GoogleMapSearchResultExtractor.Service.GoogleSearchService.GetHtmlDocument(String url) in C:\Users\Kris\Documents\Git\GoogleMapSearchResultExtractor\GoogleMapSearchResultExtractor\Service\Implementation\GoogleSearchService.cs:line 954
+   at GoogleMapSearchResultExtractor.Service.GoogleSearchService.GetListOfMapResult(String keyword, Int32 offset) in C:\Users\Kris\Documents\Git\GoogleMapSearchResultExtractor\GoogleMapSearchResultExtractor\Service\Implementation\GoogleSearchService.cs:line 25
+   at GoogleMapSearchResultExtractor.Controller.MapResultController.BackgroundWorker_DoWork(Object sender, DoWorkEventArgs e) in C:\Users\Kris\Documents\Git\GoogleMapSearchResultExtractor\GoogleMapSearchResultExtractor\Controller\MapResultController.cs:line 76</div>
+<div class='info'>[info] 2021-06-27 02:32:57: Search completed.</div>
+<div class='info'>[info] 2021-06-27 02:32:57: 0 search result (elapsed time 00:00:00.0)</div>
+<div class='info'>[info] 2021-06-27 02:32:57: End of search.</div>
+<div class='info'>[info] 2021-06-27 02:33:06: Start search.</div>
+<div class='info'>[info] 2021-06-27 02:33:06: Keyphrase: gasoline stations in general trias, cavite</div>
+<div class='error'>[error] 2021-06-27 02:33:07: The remote server returned an error: (429) Too Many Requests.    at System.Net.WebClient.DownloadDataInternal(Uri address, WebRequest& request)
+   at System.Net.WebClient.DownloadData(Uri address)
+   at System.Net.WebClient.DownloadData(String address)
+   at GoogleMapSearchResultExtractor.Service.GoogleSearchService.GetHtmlDocument(String url) in C:\Users\Kris\Documents\Git\GoogleMapSearchResultExtractor\GoogleMapSearchResultExtractor\Service\Implementation\GoogleSearchService.cs:line 954
+   at GoogleMapSearchResultExtractor.Service.GoogleSearchService.GetListOfMapResult(String keyword, Int32 offset) in C:\Users\Kris\Documents\Git\GoogleMapSearchResultExtractor\GoogleMapSearchResultExtractor\Service\Implementation\GoogleSearchService.cs:line 25
+   at GoogleMapSearchResultExtractor.Controller.MapResultController.BackgroundWorker_DoWork(Object sender, DoWorkEventArgs e) in C:\Users\Kris\Documents\Git\GoogleMapSearchResultExtractor\GoogleMapSearchResultExtractor\Controller\MapResultController.cs:line 76</div>
+<div class='info'>[info] 2021-06-27 02:33:07: Search completed.</div>
+<div class='info'>[info] 2021-06-27 02:33:07: 0 search result (elapsed time 00:00:00.0)</div>
+<div class='info'>[info] 2021-06-27 02:33:07: End of search.</div>
+<div class='warning'>[warning] 2021-06-27 02:33:09: Clossing application...</div>

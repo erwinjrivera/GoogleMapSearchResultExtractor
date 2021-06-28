@@ -1,5 +1,6 @@
 ﻿using GoogleMapSearchResultExtractor.Model;
 using GoogleMapSearchResultExtractor.Service;
+using GoogleMapSearchResultExtractor.Utils.Logger;
 using GoogleMapSearchResultExtractor.View;
 using System;
 using System.Collections.Generic;
@@ -20,6 +21,11 @@ namespace GoogleMapSearchResultExtractor.Controller
         private BackgroundWorker _bgWorker;
         private BackgroundWorker _bgWorkerExtract;
         private CardController _controller;
+        private System.Windows.Forms.Timer _timer1;
+        private Stopwatch _stopwatch;
+        private int hr;
+        private int min;
+        private int sec;
 
         public MapResultController(IMainFormView view, MapResult model, IGoogleService service)
         {
@@ -46,8 +52,11 @@ namespace GoogleMapSearchResultExtractor.Controller
             _bgWorkerExtract.ProgressChanged += new System.ComponentModel.ProgressChangedEventHandler(this.BackgroundWorkerExtract_ProgressChanged);
             _bgWorkerExtract.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.BackgroundWorkerExtract_RunWorkerCompleted);
 
-
             _view.StatusText = string.Empty;
+
+            _timer1 = new System.Windows.Forms.Timer(new System.ComponentModel.Container());
+            _timer1.Interval = 1000;
+            _timer1.Tick += new System.EventHandler(this.timer1_Tick);
 
             UpdateResultCount(0);
         }
@@ -58,9 +67,13 @@ namespace GoogleMapSearchResultExtractor.Controller
             _cards.Clear();
 
             int limit = 20;
+
+            Logger.Info("Results:");
+            Logger.Info("");
             
             for (int offset = 0; offset != limit; offset += 20)
             {
+                Debug.WriteLine($"offset: {offset}");
                 try
                 {
                     var searchTerm = (string)e.Argument;
@@ -68,14 +81,19 @@ namespace GoogleMapSearchResultExtractor.Controller
 
                     if (result != null && result.Count > 0)
                     {
+
                         foreach (var model in result)
                         {
                             if (!_bgWorker.CancellationPending)
                             {
+                                Logger.Info($"<a href='{model.URL}'>{model.Title}</a>");
+
                                 ICardView view = new CardItemUserControl();
 
                                 _controller = new CardController(view, model);
                                 _controller.Initialize();
+
+                                Logger.Info("Extracting additional information...");
 
                                 //Thread.Sleep(new Random().Next(5, 10) * 1000);
                                 var card = _service.GetCardDetails(model.URL, model.Title);
@@ -88,20 +106,32 @@ namespace GoogleMapSearchResultExtractor.Controller
 
                                 _cards.Add(card);
 
+                                Logger.Info("");
+
                                 _bgWorker.ReportProgress(100, view);
                             }
                             else
                             {
+                                Logger.Info("Cancelling search...");
                                 e.Cancel = true;
                             }
                         } //for
+                    }
+                    else
+                    {
+                        Logger.Warning("No result found.");
                     }
                 }
                 catch (Exception ex)
                 {
                     Debug.WriteLine("Error encountered in the background worker. " + ex.Message);
+                    Logger.Error($"{ex.Message} {ex.StackTrace}");
                 }
-            }
+
+                Logger.Info($"Offset: {offset}");
+
+                //Thread.Sleep(new Random().Next(5, 10) * 1000);
+            } //for
         }
 
         private void BackgroundWorker_ProgressChanged(object sender, ProgressChangedEventArgs e)
@@ -115,6 +145,7 @@ namespace GoogleMapSearchResultExtractor.Controller
                 catch (Exception ex)
                 {
                     Debug.WriteLine(ex.Message);
+                    Logger.Error($"{ex.Message} {ex.StackTrace}");
                 }
             }
         }
@@ -127,7 +158,7 @@ namespace GoogleMapSearchResultExtractor.Controller
             }
             else if (e.Cancelled)
             {
-                
+                Logger.Info("Search has been cancelled.");
             }
             else
             {
@@ -144,6 +175,7 @@ namespace GoogleMapSearchResultExtractor.Controller
                     catch (Exception ex)
                     {
                         Debug.WriteLine(ex.Message);
+                        Logger.Error($"{ex.Message} {ex.StackTrace}");
                     }
                     finally
                     {
@@ -159,6 +191,29 @@ namespace GoogleMapSearchResultExtractor.Controller
             _view.SearchBoxEnabled = true;
             _view.ExtractButtonEnabled = true;
             _view.ChangeButtonBackground("inactive");
+
+            if (_stopwatch != null)
+            {
+                _timer1.Enabled = false;
+                _timer1.Stop();
+
+                _stopwatch.Stop();
+                TimeSpan ts = _stopwatch.Elapsed;
+
+                string result = String.Format("{0:N0} search {1} {2}",
+                    _view.GetResultCount(),
+                    (_view.GetResultCount() > 1 ? "results" : "result"),
+                    string.Format("(elapsed time {0:00}:{1:00}:{2:00}.{2})", ts.Hours, ts.Minutes, ts.Seconds, ts.Milliseconds)
+                    );
+
+                _view.ResultCount = result;
+
+                _view.StatusText = string.Empty;
+
+                Logger.Info("Search completed.");
+                Logger.Info(result);
+                Logger.Info("End of search.");
+            }
         }
 
         public void UpdateResultCount(int count)
@@ -180,13 +235,28 @@ namespace GoogleMapSearchResultExtractor.Controller
             {
                 if (!String.IsNullOrEmpty(keyword))
                 {
+                    hr = 0;
+                    min = 0;
+                    sec = 0;
+
+                    _timer1.Enabled = true;
+                    _timer1.Start();
+
+                    _stopwatch = new Stopwatch();
+                    _stopwatch.Start();
+
                     _view.Searching = true;
                     _view.SearchBoxEnabled = false;
                     _view.ExtractButtonEnabled = false;
                     _view.ChangeButtonBackground("searching");
                     _view.ClearItems();
 
+                    _timer1.Enabled = true;
+
                     UpdateResultCount(0);
+
+                    Logger.Info("Search initiated.");
+                    Logger.Info("Keyphrase: " + keyword);
 
                     _bgWorker.RunWorkerAsync(keyword);
                 }
@@ -194,21 +264,32 @@ namespace GoogleMapSearchResultExtractor.Controller
             else
             {
                 _view.ChangeButtonBackground("stopping");
+                _view.SearchButtonEnabled = false;
+
+                Logger.Warning("Initiated search cancellation.");
 
                 _bgWorker.CancelAsync();
             }
         }
 
+        
+        private void timer1_Tick(object sender, EventArgs e)
+        {
+            sec++;
 
+            _view.StatusText = string.Format("{0:00}:{1:00}:{2:00}", hr, min, sec);
 
-
-
-
-
-
-
-
-
+            if (sec == 59)
+            {
+                sec = 0;
+                min++;
+            }
+            if (min == 59)
+            {
+                min = 0;
+                hr++;
+            }
+        }
 
         public void ExtractResultToTextFile(string filename)
         {
@@ -219,7 +300,6 @@ namespace GoogleMapSearchResultExtractor.Controller
                 _view.Searching = true;
                 _view.SearchButtonEnabled = false;
                 _view.SearchBoxEnabled = false;
-
 
                 _bgWorkerExtract.RunWorkerAsync(filename);
             }
@@ -286,6 +366,7 @@ namespace GoogleMapSearchResultExtractor.Controller
             catch (Exception ex)
             {
                 Debug.WriteLine("Error while saving the extract file. " + ex.Message);
+                Logger.Error($"{ex.Message} {ex.StackTrace}");
             }
 
             /*

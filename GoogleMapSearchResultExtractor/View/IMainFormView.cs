@@ -25,6 +25,8 @@ namespace GoogleMapSearchResultExtractor.View
 
         string StatusText { set; }
 
+        int GetResultCount();
+
         void ChangeButtonBackground(string backgroundName);
 
         void ClearItems();
